@@ -476,19 +476,17 @@ async function extractInstagram(url: string): Promise<NormalizedVideo> {
 }
 
 // -------------------------------------------------------------
-// MAIN SERVER
+// MAIN SERVER & EXPRESS APP
 // -------------------------------------------------------------
-async function startServer() {
-  const app = express();
-  const PORT = 3000;
+export const app = express();
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-  // Health check
-  app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", timestamp: Date.now() });
-  });
+// Health check
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", timestamp: Date.now() });
+});
 
   // Extract media endpoint
   app.post("/api/extract", async (req, res) => {
@@ -671,24 +669,31 @@ async function startServer() {
     });
   });
 
-  // Vite middleware setup
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+  // Vite middleware setup and dev server runner
+  async function startServer() {
+    const PORT = 3000;
+    if (process.env.NODE_ENV !== "production") {
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: "spa",
+      });
+      app.use(vite.middlewares);
+    } else {
+      const distPath = path.join(process.cwd(), "dist");
+      app.use(express.static(distPath));
+      app.get("*", (_req, res) => {
+        res.sendFile(path.join(distPath, "index.html"));
+      });
+    }
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Video Downloader Server running on http://localhost:${PORT}`);
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Video Downloader Server running on http://localhost:${PORT}`);
-  });
-}
+  // When running in standalone container or local dev (not serverless like Vercel function)
+  if (!process.env.VERCEL) {
+    startServer();
+  }
 
-startServer();
+  export default app;

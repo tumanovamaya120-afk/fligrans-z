@@ -32,8 +32,7 @@
     "react-dom": "^19.0.1",
     "reelflow": "^5.6.5",
     "snapsave-media-downloader": "^2.4.1",
-    "ultra-igdl": "^1.0.3",
-    "vite": "^6.2.3"
+    "ultra-igdl": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
