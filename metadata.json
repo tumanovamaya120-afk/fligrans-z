@@ -1,0 +1,6 @@
+{
+  "name": "Video İndirici",
+  "description": "Instagram, TikTok ve YouTube Shorts videolarını link yapıştırarak hızlı ve filigransız indirin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

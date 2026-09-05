@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered user profile information",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User identifier matching Firebase Auth UID",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 254
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name of the user",
+          "maxLength": 150
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User avatar photo URL",
+          "maxLength": 2048
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account creation timestamp ISO string",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "email", "createdAt"]
+    },
+    "DownloadItem": {
+      "title": "DownloadItem",
+      "description": "A saved video item in the user's download history",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the download history entry",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user ID",
+          "maxLength": 128
+        },
+        "platform": {
+          "type": "string",
+          "description": "Source platform of the video",
+          "enum": ["instagram", "tiktok", "youtube"],
+          "maxLength": 30
+        },
+        "title": {
+          "type": "string",
+          "description": "Title or caption of the extracted video",
+          "maxLength": 500
+        },
+        "author": {
+          "type": "string",
+          "description": "Author or channel name",
+          "maxLength": 150
+        },
+        "thumbnail": {
+          "type": "string",
+          "description": "Thumbnail preview image URL",
+          "maxLength": 2048
+        },
+        "originalUrl": {
+          "type": "string",
+          "description": "Original platform link of the video",
+          "maxLength": 2048
+        },
+        "timestamp": {
+          "type": "number",
+          "description": "Client timestamp when video was saved"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp ISO string",
+          "maxLength": 50
+        }
+      },
+      "required": ["id", "userId", "platform", "title", "originalUrl", "timestamp", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/users/{userId}/downloads/{downloadId}": {
+      "schema": "DownloadItem",
+      "description": "User personal video download history"
+    }
+  }
+}
